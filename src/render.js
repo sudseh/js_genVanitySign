@@ -78,48 +78,50 @@ if __name__ == '__main__':
 */
 
 /*
-# function to generate the callsigns removing the invalid ones
-def generate_callsigns():
-    # first generate over 8000 matches
-    callsigns = []
-    for i in range(8000): #thanksVegeta
-        callsign = (rstr.xeger(r'[AKNWaknw][a-zA-Z]{0,1}[0123456789][a-zA-Z]{3}')).upper()
-        if callsign not in callsigns:
-            callsigns.append(callsign)
-
-    # then remove the invalid callsigns
-    invalidCallsignRegex = [r'[kK][aA][2-9][a-zA-Z]{2}',
-                            r'[kK][cC]4[aA][aA][a-fA-F]', 
-                            r'[kK][cC]4[uU][sS][a-zA-Z]', 
-                            r'[kK][gG]4[a-zA-Z]{2}', 
-                            r'[kK][cC]6[a-zA-Z]{2}', 
-                            r'[kK][lL]9[kK][a-hA-H][a-zA-Z]', 
-                            r'[kK][xX]6[a-zA-Z]{2}', 
-                            r'\d[sS][oO][sS]|\d[qQ][r-uR-U][a-zA-Z]', 
-                            r'[aA][m-zM-Z]\d', 
-                            r'[a-zA-Z]{2}\d[xX][a-zA-Z]{2}', 
-                            r'[aAkKnNwW][fF]\d[eE][mM][aA]', 
-                            r'[aA][a-lA-L]\d[a-zA-Z]{3}', 
-                            r'[nN][a-zA-Z]\d[a-zA-Z]{3}', 
-                            r'[wW][cCkKmMrRtT]\d[a-zA-Z]{3}', 
-                            r'[kKnNwW][pP][06789](?:[a-zA-Z]){2,3}']
-
-    invalidSigns = []
-    for invalid in callsigns:
-        for regex in invalidCallsignRegex:
-            if re.match(regex, invalid):
-                invalidSigns.append(invalid)
-
-    callsigns = list(set(callsigns) - set(invalidSigns))
-
-    # finally return the list of valid vanity callsigns
-    return callsigns
+* function to generate the callsigns removing the invalid ones
+* def generate_callsigns():
+* first generate over 8000 matches
+* then remove the invalid callsigns
+* finally return the list of valid vanity callsigns
 */
 const callsignsGenerated = () => {
+    const invalidCallsignRegex = [/[kK][aA][2-9][a-zA-Z]{2}/,
+                            /[kK][cC]4[aA][aA][a-fA-F]/, 
+                            /[kK][cC]4[uU][sS][a-zA-Z]/, 
+                            /[kK][gG]4[a-zA-Z]{2}/, 
+                            /[kK][cC]6[a-zA-Z]{2}/, 
+                            /[kK][lL]9[kK][a-hA-H][a-zA-Z]/, 
+                            /[kK][xX]6[a-zA-Z]{2}/, 
+                            /\d[sS][oO][sS]|\d[qQ][r-uR-U][a-zA-Z]/, 
+                            /[aA][m-zM-Z]\d/, 
+                            /[a-zA-Z]{2}\d[xX][a-zA-Z]{2}/, 
+                            /[aAkKnNwW][fF]\d[eE][mM][aA]/, 
+                            /[aA][a-lA-L]\d[a-zA-Z]{3}/, 
+                            /[nN][a-zA-Z]\d[a-zA-Z]{3}/, 
+                            /[wW][cCkKmMrRtT]\d[a-zA-Z]{3}/,
+                            /[kKnNwW][pP][06789](?:[a-zA-Z]){2,3}/]
+
+
     const randexp = require('randexp').randexp;
     let callsignArray = [];
-    for (let i = 0; i < 100; i++) {
-        callsignArray.push(randexp(/[AKNWaknw][a-zA-Z]{0,1}[0123456789][a-zA-Z]{3}/).toUpperCase());
+    while (callsignArray.length < 100) {
+        // generate the callsign
+        const callsign = randexp(/[AKNWaknw][a-zA-Z]{0,1}[0123456789][a-zA-Z]{3}/).toUpperCase();
+        // only enter each callsign once
+        let pushed = false;
+        // make sure it's valid
+        invalidCallsignRegex.forEach((invalid) => {
+                if (callsign.match(invalid)) {
+                    null;
+                } else {
+                    if (pushed) {
+                        null;
+                    } else {
+                        callsignArray.push(callsign);
+                        pushed = true;
+                    }
+                }
+        });
     }
     return callsignArray;
 };
